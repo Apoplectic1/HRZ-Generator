@@ -37,7 +37,7 @@ namespace HRZ_Generator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("90")]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public double Persist_SkyXTopAltitude {
             get {
                 return ((double)(this["Persist_SkyXTopAltitude"]));
@@ -49,7 +49,7 @@ namespace HRZ_Generator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-90")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-60")]
         public double Pesist_SkyXBottomAltitude {
             get {
                 return ((double)(this["Pesist_SkyXBottomAltitude"]));
@@ -68,6 +68,30 @@ namespace HRZ_Generator.Properties {
             }
             set {
                 this["Persist_SkyXLeftRightAzimuth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
+        public string Persist_OpenFilePath {
+            get {
+                return ((string)(this["Persist_OpenFilePath"]));
+            }
+            set {
+                this["Persist_OpenFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
+        public string Persist_SaveFilePath {
+            get {
+                return ((string)(this["Persist_SaveFilePath"]));
+            }
+            set {
+                this["Persist_SaveFilePath"] = value;
             }
         }
     }

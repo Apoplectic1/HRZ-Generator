@@ -35,12 +35,15 @@
             this.TextBoxTheSkyXBottomAltitude = new System.Windows.Forms.TextBox();
             this.LabelTheSkyXBottom = new System.Windows.Forms.Label();
             this.ButtonWriteHRZ = new System.Windows.Forms.Button();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.label4 = new System.Windows.Forms.Label();
+            this.TrackBarTransparencyTolerance = new System.Windows.Forms.TrackBar();
+            this.LabelTransparency = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.GroupBoxTolerance = new System.Windows.Forms.GroupBox();
             this.ButtonShowHorizon = new System.Windows.Forms.Button();
             this.GroupBoxTheSkyX = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.ButtonTheSkyXCalculate = new System.Windows.Forms.Button();
             this.TextBoxTheSkyXLeftRightAzimuth = new System.Windows.Forms.TextBox();
             this.LabelTheSkyXLeftRight = new System.Windows.Forms.Label();
@@ -50,13 +53,11 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setDefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarTransparencyTolerance)).BeginInit();
             this.GroupBoxTolerance.SuspendLayout();
             this.GroupBoxTheSkyX.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -79,7 +80,7 @@
             this.ButtonBrowse.Name = "ButtonBrowse";
             this.ButtonBrowse.Size = new System.Drawing.Size(88, 43);
             this.ButtonBrowse.TabIndex = 1;
-            this.ButtonBrowse.Text = "Browse";
+            this.ButtonBrowse.Text = "Browse For\r\nPanorama";
             this.ButtonBrowse.UseVisualStyleBackColor = true;
             this.ButtonBrowse.Click += new System.EventHandler(this.ButtonBrowse_Click);
             // 
@@ -89,7 +90,7 @@
             this.TextBoxTheSkyXTopAltitude.Name = "TextBoxTheSkyXTopAltitude";
             this.TextBoxTheSkyXTopAltitude.Size = new System.Drawing.Size(76, 20);
             this.TextBoxTheSkyXTopAltitude.TabIndex = 2;
-            this.TextBoxTheSkyXTopAltitude.Text = "90.0";
+            this.TextBoxTheSkyXTopAltitude.Text = "60.0";
             this.TextBoxTheSkyXTopAltitude.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxTheSkyXTopAltitude.TextChanged += new System.EventHandler(this.TextBoxTheSkyXTopAltitude_TextChanged);
             // 
@@ -108,7 +109,7 @@
             this.TextBoxTheSkyXBottomAltitude.Name = "TextBoxTheSkyXBottomAltitude";
             this.TextBoxTheSkyXBottomAltitude.Size = new System.Drawing.Size(76, 20);
             this.TextBoxTheSkyXBottomAltitude.TabIndex = 4;
-            this.TextBoxTheSkyXBottomAltitude.Text = "-90.0";
+            this.TextBoxTheSkyXBottomAltitude.Text = "-60.0";
             this.TextBoxTheSkyXBottomAltitude.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxTheSkyXBottomAltitude.TextChanged += new System.EventHandler(this.TextBoxTheSkyXBottomAltitude_TextChanged);
             // 
@@ -132,26 +133,26 @@
             this.ButtonWriteHRZ.UseVisualStyleBackColor = true;
             this.ButtonWriteHRZ.Click += new System.EventHandler(this.ButtonWriteHRZ_Click);
             // 
-            // trackBar1
+            // TrackBarTransparencyTolerance
             // 
-            this.trackBar1.Location = new System.Drawing.Point(6, 28);
-            this.trackBar1.Maximum = 255;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(207, 45);
-            this.trackBar1.TabIndex = 7;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.trackBar1.Value = 20;
-            this.trackBar1.Scroll += new System.EventHandler(this.TrackBarTolerance_Scroll);
-            this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TrackBarTolerance_MouseUp);
+            this.TrackBarTransparencyTolerance.Location = new System.Drawing.Point(6, 28);
+            this.TrackBarTransparencyTolerance.Maximum = 255;
+            this.TrackBarTransparencyTolerance.Name = "TrackBarTransparencyTolerance";
+            this.TrackBarTransparencyTolerance.Size = new System.Drawing.Size(207, 45);
+            this.TrackBarTransparencyTolerance.TabIndex = 7;
+            this.TrackBarTransparencyTolerance.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.TrackBarTransparencyTolerance.Value = 20;
+            this.TrackBarTransparencyTolerance.Scroll += new System.EventHandler(this.TrackBarTolerance_Scroll);
+            this.TrackBarTransparencyTolerance.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TrackBarTolerance_MouseUp);
             // 
-            // label4
+            // LabelTransparency
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(214, 44);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(19, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "20";
+            this.LabelTransparency.AutoSize = true;
+            this.LabelTransparency.Location = new System.Drawing.Point(214, 44);
+            this.LabelTransparency.Name = "LabelTransparency";
+            this.LabelTransparency.Size = new System.Drawing.Size(19, 13);
+            this.LabelTransparency.TabIndex = 9;
+            this.LabelTransparency.Text = "20";
             // 
             // label3
             // 
@@ -165,9 +166,9 @@
             // GroupBoxTolerance
             // 
             this.GroupBoxTolerance.Controls.Add(this.ButtonShowHorizon);
-            this.GroupBoxTolerance.Controls.Add(this.trackBar1);
+            this.GroupBoxTolerance.Controls.Add(this.TrackBarTransparencyTolerance);
             this.GroupBoxTolerance.Controls.Add(this.label3);
-            this.GroupBoxTolerance.Controls.Add(this.label4);
+            this.GroupBoxTolerance.Controls.Add(this.LabelTransparency);
             this.GroupBoxTolerance.Controls.Add(this.ButtonShowTransparency);
             this.GroupBoxTolerance.Enabled = false;
             this.GroupBoxTolerance.Location = new System.Drawing.Point(115, 29);
@@ -206,6 +207,33 @@
             this.GroupBoxTheSkyX.TabIndex = 12;
             this.GroupBoxTheSkyX.TabStop = false;
             this.GroupBoxTheSkyX.Text = "The SkyX Horizon Photograph Settings";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(238, 62);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(44, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Azimuth";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(137, 63);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(42, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Altitude";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(38, 65);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(42, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Altitude";
             // 
             // ButtonTheSkyXCalculate
             // 
@@ -267,7 +295,8 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setDefaultsToolStripMenuItem,
-            this.exitToolStripMenuItem});
+            this.exitToolStripMenuItem,
+            this.exitToolStripMenuItem1});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -275,14 +304,23 @@
             // setDefaultsToolStripMenuItem
             // 
             this.setDefaultsToolStripMenuItem.Name = "setDefaultsToolStripMenuItem";
-            this.setDefaultsToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.setDefaultsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.setDefaultsToolStripMenuItem.Text = "Set Defaults";
+            this.setDefaultsToolStripMenuItem.Click += new System.EventHandler(this.SetDefaultsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Text = "Open Panorama";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.OpenPanoramaToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem1
+            // 
+            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem1.Text = "Exit";
+            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.ExitToolStripMenuItem1_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -292,7 +330,7 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -305,33 +343,6 @@
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
             this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem1.Text = "About";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(38, 65);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Altitude";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(137, 63);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(42, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Altitude";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(238, 62);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 13);
-            this.label5.TabIndex = 11;
-            this.label5.Text = "Azimuth";
             // 
             // FormMain
             // 
@@ -347,7 +358,9 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.Text = "The SkyX HRZ Generator";
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarTransparencyTolerance)).EndInit();
             this.GroupBoxTolerance.ResumeLayout(false);
             this.GroupBoxTolerance.PerformLayout();
             this.GroupBoxTheSkyX.ResumeLayout(false);
@@ -370,8 +383,8 @@
         private System.Windows.Forms.TextBox TextBoxTheSkyXBottomAltitude;
         private System.Windows.Forms.Label LabelTheSkyXBottom;
         private System.Windows.Forms.Button ButtonWriteHRZ;
-        private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TrackBar TrackBarTransparencyTolerance;
+        private System.Windows.Forms.Label LabelTransparency;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox GroupBoxTolerance;
         private System.Windows.Forms.Button ButtonShowHorizon;
@@ -391,6 +404,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
     }
 }
 

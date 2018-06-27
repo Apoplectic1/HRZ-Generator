@@ -6,13 +6,19 @@
       <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="Persist_SkyXTopAltitude" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">90</Value>
+      <Value Profile="(Default)">60</Value>
     </Setting>
     <Setting Name="Pesist_SkyXBottomAltitude" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">-90</Value>
+      <Value Profile="(Default)">-60</Value>
     </Setting>
     <Setting Name="Persist_SkyXLeftRightAzimuth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Persist_OpenFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="Persist_SaveFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">""</Value>
     </Setting>
   </Settings>
 </SettingsFile>

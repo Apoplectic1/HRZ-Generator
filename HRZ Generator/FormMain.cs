@@ -10,7 +10,10 @@ namespace HRZ_Generator
 {
     public partial class FormMain : Form
     {
-        private OpenFileDialog mPanoramaFileDialog = new System.Windows.Forms.OpenFileDialog();
+        private OpenFileDialog mOpenPanoramaFileDialog = new System.Windows.Forms.OpenFileDialog();
+        private string mOpenFilePath = string.Empty;
+        private SaveFileDialog mSaveHorizonFile = new SaveFileDialog();
+        private string mSaveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Software Bisque\TheSkyX Professional Edition";
         private string mPanoramaFileName;
         private Bitmap mPanoramaBitmap = null;
         private Bitmap mFormBitmap = null;
@@ -19,35 +22,63 @@ namespace HRZ_Generator
         private int[] mHorizonData = null;
         private bool mBoolTrackBarToleranceStill = true;
         private bool mBoolShowHorizonLine;
-
-        private double mTheSkyXTopAltitude = 90.0;
-        private double mTheSkyXBottomAltitude = -90.0;
+        private double mTheSkyXTopAltitude = 60.0;
+        private double mTheSkyXBottomAltitude = -60.0;
         private double mTheSkyXLeftRightAzimuth = 0.0;
 
         public FormMain()
         {
             InitializeComponent();
+
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                System.Deployment.Application.ApplicationDeployment ad = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
+                Version version = ad.CurrentVersion;
+                Text = "The SkyX Horizon File Generator - Version: " + version.ToString();
+            }
+            else
+            {
+                Text = "The SkyX Horizon File Generator - Version: " + System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString("yyyy.MM.dd - HHMM");
+            }
+        }
+        void MainForm_Load(object sender, EventArgs e)
+        {
+            RecallUiPersistanceStates();
+        }
+        private void FormMain_FormClosing(Object sender, FormClosingEventArgs e)
+        {
+            SaveUiPersistanceStates();
         }
 
-
-        void SaveUiPersistanceStatesInternal()
+        void SaveUiPersistanceStates()
         {
             Settings.Default.Persist_SkyXLeftRightAzimuth = mTheSkyXLeftRightAzimuth;
             Settings.Default.Persist_SkyXTopAltitude = mTheSkyXTopAltitude;
             Settings.Default.Pesist_SkyXBottomAltitude = mTheSkyXBottomAltitude;
             Settings.Default.Persist_TransparencyTolerance = mTransparencyTolerance;
+            Settings.Default.Persist_OpenFilePath = mOpenFilePath;
+            Settings.Default.Persist_SaveFilePath = mSaveFilePath;
+            Settings.Default.Save();
         }
-        void RecallUiPersistanceStatesInternal()
+        void RecallUiPersistanceStates()
         {
             mTheSkyXLeftRightAzimuth = Settings.Default.Persist_SkyXLeftRightAzimuth;
             mTheSkyXTopAltitude = Settings.Default.Persist_SkyXTopAltitude;
             mTheSkyXBottomAltitude = Settings.Default.Pesist_SkyXBottomAltitude;
             mTransparencyTolerance = Settings.Default.Persist_TransparencyTolerance;
+            mOpenFilePath = Settings.Default.Persist_OpenFilePath;
+            mSaveFilePath = Settings.Default.Persist_SaveFilePath;
+
+            TextBoxTheSkyXLeftRightAzimuth.Text = mTheSkyXLeftRightAzimuth.ToString("F1");
+            TextBoxTheSkyXTopAltitude.Text = mTheSkyXTopAltitude.ToString("F1");
+            TextBoxTheSkyXBottomAltitude.Text = mTheSkyXBottomAltitude.ToString("F1");
+            TrackBarTransparencyTolerance.Value = Convert.ToInt32(mTransparencyTolerance);
         }
 
         private void ButtonShowTransparency_Click(object sender, EventArgs e)
         {
             mBoolShowHorizonLine = false;
+
             FindHorizon();
 
             GroupBoxTolerance.Enabled = true;
@@ -57,6 +88,7 @@ namespace HRZ_Generator
         private void ButtonShowHorizon_Click(object sender, EventArgs e)
         {
             mBoolShowHorizonLine = true;
+
             FindHorizon();
 
             GroupBoxTolerance.Enabled = true;
@@ -65,25 +97,26 @@ namespace HRZ_Generator
         }
         private void TrackBarTolerance_Scroll(object sender, EventArgs e)
         {
-            mTransparencyTolerance = trackBar1.Value;
-            label4.Text = mTransparencyTolerance.ToString();
+            mTransparencyTolerance = TrackBarTransparencyTolerance.Value;
+            LabelTransparency.Text = mTransparencyTolerance.ToString();
 
             mBoolTrackBarToleranceStill = false;
         }
 
         private void ButtonWriteHRZ_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveHorizonFile = new SaveFileDialog();
-            saveHorizonFile.FileName = "Custom Horizon.hrz";
-            saveHorizonFile.Filter = "Horizon files (*.hrz)|*.hrz|All files (*.*)|*.*";
-            saveHorizonFile.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Software Bisque\TheSkyX Professional Edition";
+            mSaveHorizonFile.FileName = "Custom Horizon.hrz";
+            mSaveHorizonFile.Filter = "Horizon files (*.hrz)|*.hrz|All files (*.*)|*.*";
+            mSaveHorizonFile.InitialDirectory = mSaveFilePath;
 
-            if (saveHorizonFile.ShowDialog() != DialogResult.OK)
+            if (mSaveHorizonFile.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            string path = Path.GetFullPath(saveHorizonFile.FileName);
+            mSaveFilePath = Path.GetDirectoryName(mSaveHorizonFile.FileName);
+
+            string path = Path.GetFullPath(mSaveHorizonFile.FileName);
 
             string text;
 
@@ -230,10 +263,6 @@ namespace HRZ_Generator
         //        destinationBitmap.UnlockBits(destinationData);
         //    }
 
-
-
-
-
         //    sourceRectangle      = new Rectangle(0,                  0, srourceBitmap.Width - (int)azimuthColumn, srourceBitmap.Height);
         //    destinationRectangle = new Rectangle((int)azimuthColumn, 0, srourceBitmap.Width - (int)azimuthColumn, srourceBitmap.Height);
 
@@ -261,10 +290,6 @@ namespace HRZ_Generator
         //        srourceBitmap.UnlockBits(sourceData);
         //        destinationBitmap.UnlockBits(destinationData);
         //    }
-
-
-
-
 
         //    return destinationBitmap;
         //}
@@ -377,11 +402,14 @@ namespace HRZ_Generator
 
         private void ButtonBrowse_Click(object sender, EventArgs e)
         {
-            DialogResult result = mPanoramaFileDialog.ShowDialog();
+            mOpenPanoramaFileDialog.InitialDirectory = mOpenFilePath;
+            DialogResult result = mOpenPanoramaFileDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                mPanoramaFileName = mPanoramaFileDialog.FileName;
+                mPanoramaFileName = mOpenPanoramaFileDialog.FileName;
+                mOpenFilePath = Path.GetDirectoryName(mOpenPanoramaFileDialog.FileName);
+
                 mPanoramaBitmap = new Bitmap(mPanoramaFileName);
                 mFormBitmap = new Bitmap(mPanoramaFileName);
 
@@ -389,14 +417,13 @@ namespace HRZ_Generator
                 mPanoramaPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
 
                 mPanoramaPictureBox.Dock = DockStyle.Fill;
-
                 mPanoramaPictureBox.Image = mFormBitmap;
 
                 Controls.Add(mPanoramaPictureBox);
 
                 if (mPanoramaBitmap.Width % 512 != 0)
                 {
-                    MessageBox.Show("The horizon file must be a multiple of 512 pixels wide.\n\n" +
+                    MessageBox.Show("The horizon file must be minimum of, and a multiple of 512 pixels wide.\n\n" +
                         "This file is " + mPanoramaBitmap.Width + " pixels wide by " + mPanoramaBitmap.Height + " pixels high.\n\n" +
                         "Please select a different file.\n\n", "Horizon File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -506,9 +533,67 @@ namespace HRZ_Generator
 
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+
+
+        private void OpenPanoramaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = mOpenPanoramaFileDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                mPanoramaFileName = mOpenPanoramaFileDialog.FileName;
+                mPanoramaBitmap = new Bitmap(mPanoramaFileName);
+                mFormBitmap = new Bitmap(mPanoramaFileName);
+
+                mPanoramaPictureBox = new PictureBox();
+                mPanoramaPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                mPanoramaPictureBox.Dock = DockStyle.Fill;
+
+                mPanoramaPictureBox.Image = mFormBitmap;
+
+                Controls.Add(mPanoramaPictureBox);
+
+                if (mPanoramaBitmap.Width % 512 != 0)
+                {
+                    MessageBox.Show("The horizon file must be a multiple of 512 pixels wide.\n\n" +
+                        "This file is " + mPanoramaBitmap.Width + " pixels wide by " + mPanoramaBitmap.Height + " pixels high.\n\n" +
+                        "Please select a different file.\n\n", "Horizon File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    GroupBoxTolerance.Enabled = false;
+                    GroupBoxTheSkyX.Enabled = false;
+                    ButtonWriteHRZ.Enabled = false;
+                    return;
+                }
+
+                GroupBoxTolerance.Enabled = true;
+                GroupBoxTheSkyX.Enabled = true;
+                ButtonWriteHRZ.Enabled = false;
+
+            }
+        }
+
+        private void ExitToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void SetDefaultsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mTheSkyXLeftRightAzimuth = 0;
+            mTheSkyXTopAltitude = 60;
+            mTheSkyXBottomAltitude = -60;
+            mTransparencyTolerance = 20;
+
+            TextBoxTheSkyXLeftRightAzimuth.Text = mTheSkyXLeftRightAzimuth.ToString("F1");
+            TextBoxTheSkyXTopAltitude.Text = mTheSkyXTopAltitude.ToString("F1");
+            TextBoxTheSkyXBottomAltitude.Text = mTheSkyXBottomAltitude.ToString("F1");
+            TrackBarTransparencyTolerance.Value = Convert.ToInt32(mTransparencyTolerance);
         }
     }
 }
