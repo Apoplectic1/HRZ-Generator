@@ -1,4 +1,6 @@
-﻿namespace HRZ_Generator
+﻿using System.Windows.Forms;
+
+namespace HRZ_Generator
 {
     partial class FormMain
     {
@@ -35,13 +37,16 @@
             this.LabelTheSkyXBottom = new System.Windows.Forms.Label();
             this.ButtonWriteHRZ = new System.Windows.Forms.Button();
             this.TrackBarTransparencyTolerance = new System.Windows.Forms.TrackBar();
-            this.LabelTransparency = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.GroupBoxTolerance = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.RadioButtonHorizonImageSkyHorizonMask = new System.Windows.Forms.RadioButton();
+            this.RadioButtonHorizonImageMeridianHorizon = new System.Windows.Forms.RadioButton();
+            this.RadioButtonHorizonImageHide = new System.Windows.Forms.RadioButton();
+            this.GroupBoxPanoramaImage = new System.Windows.Forms.GroupBox();
+            this.RadioButtonPanoImageSkyHorizon = new System.Windows.Forms.RadioButton();
+            this.RadioButtonPanoImageTransparency = new System.Windows.Forms.RadioButton();
+            this.RadioButtonPanoImagePhoto = new System.Windows.Forms.RadioButton();
             this.GroupBoxTheSkyX = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -59,17 +64,21 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.GroupBoxPanoramaControls = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.TrackBarTransparencyTolerance)).BeginInit();
             this.GroupBoxTolerance.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.GroupBoxPanoramaImage.SuspendLayout();
             this.GroupBoxTheSkyX.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.GroupBoxPanoramaControls.SuspendLayout();
             this.SuspendLayout();
             // 
             // ButtonBrowse
             // 
-            this.ButtonBrowse.Location = new System.Drawing.Point(12, 55);
+            this.ButtonBrowse.Location = new System.Drawing.Point(16, 49);
             this.ButtonBrowse.Name = "ButtonBrowse";
             this.ButtonBrowse.Size = new System.Drawing.Size(88, 43);
             this.ButtonBrowse.TabIndex = 1;
@@ -118,7 +127,7 @@
             // ButtonWriteHRZ
             // 
             this.ButtonWriteHRZ.Enabled = false;
-            this.ButtonWriteHRZ.Location = new System.Drawing.Point(1001, 55);
+            this.ButtonWriteHRZ.Location = new System.Drawing.Point(1101, 49);
             this.ButtonWriteHRZ.Name = "ButtonWriteHRZ";
             this.ButtonWriteHRZ.Size = new System.Drawing.Size(118, 43);
             this.ButtonWriteHRZ.TabIndex = 6;
@@ -136,16 +145,6 @@
             this.TrackBarTransparencyTolerance.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.TrackBarTransparencyTolerance.Value = 20;
             this.TrackBarTransparencyTolerance.Scroll += new System.EventHandler(this.TrackBarTolerance_Scroll);
-            this.TrackBarTransparencyTolerance.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TrackBarTolerance_MouseUp);
-            // 
-            // LabelTransparency
-            // 
-            this.LabelTransparency.AutoSize = true;
-            this.LabelTransparency.Location = new System.Drawing.Point(214, 44);
-            this.LabelTransparency.Name = "LabelTransparency";
-            this.LabelTransparency.Size = new System.Drawing.Size(19, 13);
-            this.LabelTransparency.TabIndex = 9;
-            this.LabelTransparency.Text = "20";
             // 
             // label3
             // 
@@ -158,64 +157,109 @@
             // 
             // GroupBoxTolerance
             // 
-            this.GroupBoxTolerance.Controls.Add(this.groupBox1);
+            this.GroupBoxTolerance.Controls.Add(this.groupBox2);
+            this.GroupBoxTolerance.Controls.Add(this.GroupBoxPanoramaImage);
             this.GroupBoxTolerance.Controls.Add(this.TrackBarTransparencyTolerance);
             this.GroupBoxTolerance.Controls.Add(this.label3);
-            this.GroupBoxTolerance.Controls.Add(this.LabelTransparency);
             this.GroupBoxTolerance.Enabled = false;
-            this.GroupBoxTolerance.Location = new System.Drawing.Point(115, 29);
+            this.GroupBoxTolerance.Location = new System.Drawing.Point(126, 19);
             this.GroupBoxTolerance.Name = "GroupBoxTolerance";
-            this.GroupBoxTolerance.Size = new System.Drawing.Size(441, 93);
+            this.GroupBoxTolerance.Size = new System.Drawing.Size(533, 93);
             this.GroupBoxTolerance.TabIndex = 11;
             this.GroupBoxTolerance.TabStop = false;
             this.GroupBoxTolerance.Text = "Panoramic Horizon Photograph Transparency";
             // 
-            // groupBox1
+            // groupBox2
             // 
-            this.groupBox1.Controls.Add(this.radioButton3);
-            this.groupBox1.Controls.Add(this.radioButton2);
-            this.groupBox1.Controls.Add(this.radioButton1);
-            this.groupBox1.Location = new System.Drawing.Point(241, 11);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(182, 76);
-            this.groupBox1.TabIndex = 11;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox2.Controls.Add(this.RadioButtonHorizonImageSkyHorizonMask);
+            this.groupBox2.Controls.Add(this.RadioButtonHorizonImageMeridianHorizon);
+            this.groupBox2.Controls.Add(this.RadioButtonHorizonImageHide);
+            this.groupBox2.Location = new System.Drawing.Point(374, 11);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(150, 75);
+            this.groupBox2.TabIndex = 12;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Equatorial Lines";
             // 
-            // radioButton3
+            // RadioButtonHorizonImageSkyHorizonMask
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(78, 52);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(82, 17);
-            this.radioButton3.TabIndex = 2;
-            this.radioButton3.Text = "Sky Horizon";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.RadioButtonShowSkyHorizon_CheckedChanged);
+            this.RadioButtonHorizonImageSkyHorizonMask.AutoSize = true;
+            this.RadioButtonHorizonImageSkyHorizonMask.Location = new System.Drawing.Point(17, 55);
+            this.RadioButtonHorizonImageSkyHorizonMask.Name = "RadioButtonHorizonImageSkyHorizonMask";
+            this.RadioButtonHorizonImageSkyHorizonMask.Size = new System.Drawing.Size(111, 17);
+            this.RadioButtonHorizonImageSkyHorizonMask.TabIndex = 2;
+            this.RadioButtonHorizonImageSkyHorizonMask.Text = "Sky Horizon Mask";
+            this.RadioButtonHorizonImageSkyHorizonMask.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // RadioButtonHorizonImageMeridianHorizon
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(78, 31);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(90, 17);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.Text = "Transparency";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.RadioButtonShowTransparency_CheckedChanged);
+            this.RadioButtonHorizonImageMeridianHorizon.AutoSize = true;
+            this.RadioButtonHorizonImageMeridianHorizon.Checked = true;
+            this.RadioButtonHorizonImageMeridianHorizon.Location = new System.Drawing.Point(17, 35);
+            this.RadioButtonHorizonImageMeridianHorizon.Name = "RadioButtonHorizonImageMeridianHorizon";
+            this.RadioButtonHorizonImageMeridianHorizon.Size = new System.Drawing.Size(106, 17);
+            this.RadioButtonHorizonImageMeridianHorizon.TabIndex = 1;
+            this.RadioButtonHorizonImageMeridianHorizon.TabStop = true;
+            this.RadioButtonHorizonImageMeridianHorizon.Text = "Meridian/Horizon";
+            this.RadioButtonHorizonImageMeridianHorizon.UseVisualStyleBackColor = true;
             // 
-            // radioButton1
+            // RadioButtonHorizonImageHide
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(78, 10);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(53, 17);
-            this.radioButton1.TabIndex = 0;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Photo";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.RadioButtonShowPhoto_CheckedChanged);
+            this.RadioButtonHorizonImageHide.AutoSize = true;
+            this.RadioButtonHorizonImageHide.Location = new System.Drawing.Point(17, 15);
+            this.RadioButtonHorizonImageHide.Name = "RadioButtonHorizonImageHide";
+            this.RadioButtonHorizonImageHide.Size = new System.Drawing.Size(47, 17);
+            this.RadioButtonHorizonImageHide.TabIndex = 0;
+            this.RadioButtonHorizonImageHide.Text = "Hide";
+            this.RadioButtonHorizonImageHide.UseVisualStyleBackColor = true;
+            this.RadioButtonHorizonImageHide.CheckedChanged += new System.EventHandler(this.RadioButtonHorizonImageHide_CheckedChanged);
+            // 
+            // GroupBoxPanoramaImage
+            // 
+            this.GroupBoxPanoramaImage.Controls.Add(this.RadioButtonPanoImageSkyHorizon);
+            this.GroupBoxPanoramaImage.Controls.Add(this.RadioButtonPanoImageTransparency);
+            this.GroupBoxPanoramaImage.Controls.Add(this.RadioButtonPanoImagePhoto);
+            this.GroupBoxPanoramaImage.Location = new System.Drawing.Point(241, 11);
+            this.GroupBoxPanoramaImage.Name = "GroupBoxPanoramaImage";
+            this.GroupBoxPanoramaImage.Size = new System.Drawing.Size(111, 76);
+            this.GroupBoxPanoramaImage.TabIndex = 11;
+            this.GroupBoxPanoramaImage.TabStop = false;
+            this.GroupBoxPanoramaImage.Text = "Panoramic Image";
+            // 
+            // RadioButtonPanoImageSkyHorizon
+            // 
+            this.RadioButtonPanoImageSkyHorizon.AutoSize = true;
+            this.RadioButtonPanoImageSkyHorizon.Location = new System.Drawing.Point(14, 55);
+            this.RadioButtonPanoImageSkyHorizon.Name = "RadioButtonPanoImageSkyHorizon";
+            this.RadioButtonPanoImageSkyHorizon.Size = new System.Drawing.Size(82, 17);
+            this.RadioButtonPanoImageSkyHorizon.TabIndex = 2;
+            this.RadioButtonPanoImageSkyHorizon.Text = "Sky Horizon";
+            this.RadioButtonPanoImageSkyHorizon.UseVisualStyleBackColor = true;
+            this.RadioButtonPanoImageSkyHorizon.CheckedChanged += new System.EventHandler(this.RadioButtonShowSkyHorizon_CheckedChanged);
+            // 
+            // RadioButtonPanoImageTransparency
+            // 
+            this.RadioButtonPanoImageTransparency.AutoSize = true;
+            this.RadioButtonPanoImageTransparency.Location = new System.Drawing.Point(14, 35);
+            this.RadioButtonPanoImageTransparency.Name = "RadioButtonPanoImageTransparency";
+            this.RadioButtonPanoImageTransparency.Size = new System.Drawing.Size(90, 17);
+            this.RadioButtonPanoImageTransparency.TabIndex = 1;
+            this.RadioButtonPanoImageTransparency.Text = "Transparency";
+            this.RadioButtonPanoImageTransparency.UseVisualStyleBackColor = true;
+            this.RadioButtonPanoImageTransparency.CheckedChanged += new System.EventHandler(this.RadioButtonShowTransparency_CheckedChanged);
+            // 
+            // RadioButtonPanoImagePhoto
+            // 
+            this.RadioButtonPanoImagePhoto.AutoSize = true;
+            this.RadioButtonPanoImagePhoto.Checked = true;
+            this.RadioButtonPanoImagePhoto.Location = new System.Drawing.Point(14, 15);
+            this.RadioButtonPanoImagePhoto.Name = "RadioButtonPanoImagePhoto";
+            this.RadioButtonPanoImagePhoto.Size = new System.Drawing.Size(53, 17);
+            this.RadioButtonPanoImagePhoto.TabIndex = 0;
+            this.RadioButtonPanoImagePhoto.TabStop = true;
+            this.RadioButtonPanoImagePhoto.Text = "Photo";
+            this.RadioButtonPanoImagePhoto.UseVisualStyleBackColor = true;
+            this.RadioButtonPanoImagePhoto.CheckedChanged += new System.EventHandler(this.RadioButtonShowPhoto_CheckedChanged);
             // 
             // GroupBoxTheSkyX
             // 
@@ -230,7 +274,7 @@
             this.GroupBoxTheSkyX.Controls.Add(this.TextBoxTheSkyXBottomAltitude);
             this.GroupBoxTheSkyX.Controls.Add(this.LabelTheSkyXBottom);
             this.GroupBoxTheSkyX.Enabled = false;
-            this.GroupBoxTheSkyX.Location = new System.Drawing.Point(576, 29);
+            this.GroupBoxTheSkyX.Location = new System.Drawing.Point(665, 19);
             this.GroupBoxTheSkyX.Name = "GroupBoxTheSkyX";
             this.GroupBoxTheSkyX.Size = new System.Drawing.Size(414, 93);
             this.GroupBoxTheSkyX.TabIndex = 12;
@@ -297,9 +341,9 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 584);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 588);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1130, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1271, 22);
             this.statusStrip1.TabIndex = 13;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -316,7 +360,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1130, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1271, 24);
             this.menuStrip1.TabIndex = 14;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -373,17 +417,42 @@
             this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem1.Text = "About";
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Location = new System.Drawing.Point(12, 190);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1247, 390);
+            this.panel1.TabIndex = 15;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // GroupBoxPanoramaControls
+            // 
+            this.GroupBoxPanoramaControls.Controls.Add(this.GroupBoxTheSkyX);
+            this.GroupBoxPanoramaControls.Controls.Add(this.GroupBoxTolerance);
+            this.GroupBoxPanoramaControls.Controls.Add(this.ButtonBrowse);
+            this.GroupBoxPanoramaControls.Controls.Add(this.ButtonWriteHRZ);
+            this.GroupBoxPanoramaControls.Location = new System.Drawing.Point(12, 26);
+            this.GroupBoxPanoramaControls.Name = "GroupBoxPanoramaControls";
+            this.GroupBoxPanoramaControls.Size = new System.Drawing.Size(1247, 122);
+            this.GroupBoxPanoramaControls.TabIndex = 16;
+            this.GroupBoxPanoramaControls.TabStop = false;
+            this.GroupBoxPanoramaControls.Text = "The SkyX Panorama Controls";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1130, 606);
+            this.ClientSize = new System.Drawing.Size(1271, 610);
+            this.Controls.Add(this.GroupBoxPanoramaControls);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.GroupBoxTheSkyX);
-            this.Controls.Add(this.GroupBoxTolerance);
-            this.Controls.Add(this.ButtonWriteHRZ);
-            this.Controls.Add(this.ButtonBrowse);
+            this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.Text = "The SkyX HRZ Generator";
@@ -392,14 +461,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.TrackBarTransparencyTolerance)).EndInit();
             this.GroupBoxTolerance.ResumeLayout(false);
             this.GroupBoxTolerance.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.GroupBoxPanoramaImage.ResumeLayout(false);
+            this.GroupBoxPanoramaImage.PerformLayout();
             this.GroupBoxTheSkyX.ResumeLayout(false);
             this.GroupBoxTheSkyX.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.GroupBoxPanoramaControls.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -413,7 +485,6 @@
         private System.Windows.Forms.Label LabelTheSkyXBottom;
         private System.Windows.Forms.Button ButtonWriteHRZ;
         private System.Windows.Forms.TrackBar TrackBarTransparencyTolerance;
-        private System.Windows.Forms.Label LabelTransparency;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox GroupBoxTolerance;
         private System.Windows.Forms.GroupBox GroupBoxTheSkyX;
@@ -433,10 +504,16 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.GroupBox GroupBoxPanoramaImage;
+        private System.Windows.Forms.RadioButton RadioButtonPanoImageSkyHorizon;
+        private System.Windows.Forms.RadioButton RadioButtonPanoImageTransparency;
+        private System.Windows.Forms.RadioButton RadioButtonPanoImagePhoto;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox GroupBoxPanoramaControls;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton RadioButtonHorizonImageSkyHorizonMask;
+        private System.Windows.Forms.RadioButton RadioButtonHorizonImageMeridianHorizon;
+        private System.Windows.Forms.RadioButton RadioButtonHorizonImageHide;
     }
 }
 

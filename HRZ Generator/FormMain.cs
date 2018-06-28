@@ -15,16 +15,18 @@ namespace HRZ_Generator
         private SaveFileDialog mSaveHorizonFile = new SaveFileDialog();
         private string mSaveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Software Bisque\TheSkyX Professional Edition";
         private string mPanoramaFileName;
-        private Bitmap mPanoramaBitmap = null;
-        private Bitmap mFormBitmap = null;
+        private Bitmap mPhotoBitmap = null;
+        private Bitmap mTansparencyBitmap = null;
+        private Bitmap mSkyLineBitmap = null;
         private int mTransparencyTolerance = 20;
         private PictureBox mPanoramaPictureBox;
         private int[] mHorizonData = null;
-        private bool mBoolTrackBarToleranceStill = true;
-        private bool mBoolShowHorizonLine;
+        private bool mBoolShowSkyHorizonLine;
         private double mTheSkyXTopAltitude = 60.0;
         private double mTheSkyXBottomAltitude = -60.0;
         private double mTheSkyXLeftRightAzimuth = 0.0;
+        private Timer mScrollTimer = null;
+        private byte[] mPanoramaImagePixels = null;
 
         public FormMain()
         {
@@ -44,6 +46,22 @@ namespace HRZ_Generator
         void MainForm_Load(object sender, EventArgs e)
         {
             RecallUiPersistanceStates();
+
+            ToolTip ToolTips = new ToolTip();
+            ToolTips.IsBalloon = false;
+            ToolTips.AutoPopDelay = 20000;
+            ToolTips.InitialDelay = 1500;
+
+            ToolTips.SetToolTip(ButtonBrowse, "Select an image to be used as the The SkyX Horizon Photograph.\n\n" +
+                "Browse to the directory which contains any four channel 360 degree panoramic image (ARGB) that uses alpha channel transparency.\n\n" +
+                "The SkyX requires horizon images to be whole multiples of 512 pixels wide. Image height is arbitrary.\n\n" +
+                "The selected image is limited to the .png, .jpg and .tiff container types and must be supported by The SkyX. Monochrome images are not currently supported.");
+
+            ToolTips.SetToolTip(TrackBarTransparencyTolerance, "" +
+                "Use this TrackBar to adjust the source panoramic image transparency threshold.\n\n" +
+                "This TrackBar is intended to be used to ignore low, but non-zero alpha channel transparency values.\n" +
+                "Nearly transparent pixels commonly appear as blooming at the transition of transparent sky to opaque terrain.\n\n" +
+                "Aplha channel values above the TrackBar value will be considered to be transparent.");
         }
         private void FormMain_FormClosing(Object sender, FormClosingEventArgs e)
         {
@@ -77,10 +95,53 @@ namespace HRZ_Generator
 
         private void TrackBarTolerance_Scroll(object sender, EventArgs e)
         {
-            mTransparencyTolerance = TrackBarTransparencyTolerance.Value;
-            LabelTransparency.Text = mTransparencyTolerance.ToString();
+            if (mScrollTimer == null)
+            {
+                // Will tick every 500ms (change as required)
+                mScrollTimer = new Timer()
+                {
+                    Enabled = false,
+                    Interval = 30,
+                    Tag = (sender as TrackBar).Value
+                };
 
-            mBoolTrackBarToleranceStill = false;
+                mScrollTimer.Tick += (s, ea) =>
+                {
+                    // check to see if the value has changed since we last ticked
+                    if (TrackBarTransparencyTolerance.Value == (int)mScrollTimer.Tag)
+                    {
+                        // scrolling has stopped so we are good to go ahead and do stuff
+                        mScrollTimer.Stop();
+
+                        if (RadioButtonPanoImageTransparency.Checked)
+                        {
+                            mBoolShowSkyHorizonLine = false;
+                            FindHorizon(mTansparencyBitmap);
+                            panel1.BackgroundImage = mTansparencyBitmap;
+                            panel1.Invalidate(false);
+                        }
+
+                        //if (RadioButtonPanoImageSkyHorizon.Checked)
+                        //{
+                        //    mBoolShowSkyHorizonLine = true;
+                        //    FindHorizon(mSkyLineBitmap);
+                        //    panel1.BackgroundImage = mSkyLineBitmap;
+                        //    panel1.Invalidate(false);
+                        //}
+
+                        mScrollTimer.Dispose();
+                        mScrollTimer = null;
+                    }
+                    else
+                    {
+                        // record the last value seen
+                        mTransparencyTolerance = TrackBarTransparencyTolerance.Value;
+                        mScrollTimer.Tag = TrackBarTransparencyTolerance.Value;
+                    }
+                };
+
+                mScrollTimer.Start();
+            }
         }
 
         private void ButtonWriteHRZ_Click(object sender, EventArgs e)
@@ -108,16 +169,16 @@ namespace HRZ_Generator
             double degreeColumnStart;
             double degreeColumnStop;
 
-            int[] doubleHorizon = new int[mPanoramaBitmap.Width * 2];
+            int[] doubleHorizon = new int[mPhotoBitmap.Width * 2];
 
-            for (int x = 0; x < mPanoramaBitmap.Width; x++)
+            for (int x = 0; x < mPhotoBitmap.Width; x++)
             {
                 doubleHorizon[x] = mHorizonData[x];
 
             }
-            for (int x = mPanoramaBitmap.Width; x < mPanoramaBitmap.Width * 2; x++)
+            for (int x = mPhotoBitmap.Width; x < mPhotoBitmap.Width * 2; x++)
             {
-                doubleHorizon[x] = mHorizonData[x - mPanoramaBitmap.Width];
+                doubleHorizon[x] = mHorizonData[x - mPhotoBitmap.Width];
             }
 
 
@@ -125,7 +186,7 @@ namespace HRZ_Generator
             {
                 file.WriteLine("360");
 
-                degreeSpan = mPanoramaBitmap.Width / 360.0;
+                degreeSpan = mPhotoBitmap.Width / 360.0;
 
                 mTheSkyXLeftRightAzimuth = ((int)Math.Round(mTheSkyXLeftRightAzimuth) == 0) ? 360 : mTheSkyXLeftRightAzimuth;
 
@@ -150,7 +211,7 @@ namespace HRZ_Generator
 
                     degreeColumnStart = degreeColumnStop;
 
-                    maxAltitude = Interpolate(max, 0, mPanoramaBitmap.Height, mTheSkyXTopAltitude, mTheSkyXBottomAltitude);
+                    maxAltitude = Interpolate(max, 0, mPhotoBitmap.Height, mTheSkyXTopAltitude, mTheSkyXBottomAltitude);
 
                     text = string.Format("{0,8:##.00}", maxAltitude);
                     file.WriteLine(text);
@@ -187,121 +248,26 @@ namespace HRZ_Generator
 
             return result;
         }
-        //public Bitmap sCopy32BPPBitmapSafe(Bitmap srourceBitmap, double Azimuth)
-        //{
-
-        //    Rectangle sourceRectangle;
-        //    Rectangle destinationRectangle;
-        //    BitmapData sourceData;
-        //    BitmapData destinationData;
-        //    Int64 srcScan0;
-        //    Int64 resScan0;
-        //    int srcStride;
-        //    int resStride;
-        //    int rowLength;
-
-
-
-        //    Bitmap destinationBitmap = new Bitmap(srourceBitmap.Width, srourceBitmap.Height, PixelFormat.Format32bppArgb);
-
-        //    // Convert Degrees to Bitmap Columns - Find the azimuth Degree Column
-        //    double azimuthColumn = Interpolate(Azimuth, 0, 359, 0, srourceBitmap.Width);
-        //    azimuthColumn = Math.Round(azimuthColumn);
-
-        //    // find the last column that holds degree 359.99999
-        //    double lastColumn = Interpolate(359, 0, 359, 0, srourceBitmap.Width);
-        //    lastColumn = Math.Round(lastColumn);
-
-
-        //    // move data in two block transfers
-
-        //    sourceRectangle      = new Rectangle(0,                  0, srourceBitmap.Width - (int)azimuthColumn, srourceBitmap.Height);
-        //    destinationRectangle = new Rectangle((int)azimuthColumn, 0, srourceBitmap.Width - (int)azimuthColumn, srourceBitmap.Height);
-
-        //    sourceData      = srourceBitmap.LockBits(sourceRectangle,          ImageLockMode.ReadOnly,  srourceBitmap.PixelFormat);
-        //    destinationData = destinationBitmap.LockBits(destinationRectangle, ImageLockMode.WriteOnly, destinationBitmap.PixelFormat);
-
-        //    srcScan0 = sourceData.Scan0.ToInt64();
-        //    resScan0 = destinationData.Scan0.ToInt64();
-
-        //    srcStride = sourceData.Stride;
-        //    resStride = destinationData.Stride;
-        //    rowLength = Math.Abs(sourceData.Stride);
-
-        //    try
-        //    {
-        //        byte[] buffer = new byte[rowLength];
-        //        for (int y = 0; y < sourceData.Height; y++)
-        //        {
-        //            Marshal.Copy(new IntPtr(srcScan0 + y * srcStride), buffer, 0, rowLength);
-        //            Marshal.Copy(buffer, 0, new IntPtr(resScan0 + y * resStride), rowLength);
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        srourceBitmap.UnlockBits(sourceData);
-        //        destinationBitmap.UnlockBits(destinationData);
-        //    }
-
-        //    sourceRectangle      = new Rectangle(0,                  0, srourceBitmap.Width - (int)azimuthColumn, srourceBitmap.Height);
-        //    destinationRectangle = new Rectangle((int)azimuthColumn, 0, srourceBitmap.Width - (int)azimuthColumn, srourceBitmap.Height);
-
-        //    sourceData = srourceBitmap.LockBits(sourceRectangle, ImageLockMode.ReadOnly, srourceBitmap.PixelFormat);
-        //    destinationData = destinationBitmap.LockBits(destinationRectangle, ImageLockMode.WriteOnly, destinationBitmap.PixelFormat);
-
-        //    srcScan0 = sourceData.Scan0.ToInt64();
-        //    resScan0 = destinationData.Scan0.ToInt64();
-
-        //    srcStride = sourceData.Stride;
-        //    resStride = destinationData.Stride;
-        //    rowLength = Math.Abs(sourceData.Stride);
-
-        //    try
-        //    {
-        //        byte[] buffer = new byte[rowLength];
-        //        for (int y = 0; y < sourceData.Height; y++)
-        //        {
-        //            Marshal.Copy(new IntPtr(srcScan0 + y * srcStride), buffer, 0, rowLength);
-        //            Marshal.Copy(buffer, 0, new IntPtr(resScan0 + y * resStride), rowLength);
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        srourceBitmap.UnlockBits(sourceData);
-        //        destinationBitmap.UnlockBits(destinationData);
-        //    }
-
-        //    return destinationBitmap;
-        //}
-
-        private void FindHorizon()
+        
+        private void FindHorizon(Bitmap destinationBitmap)
         {
             int height;
             int width;
             int size;
 
-            height = mPanoramaBitmap.Height;
-            width = mPanoramaBitmap.Width;
+            height = mPhotoBitmap.Height;
+            width = mPhotoBitmap.Width;
+
             mHorizonData = new int[width];
 
 
-            // Copy the original image to the byte array
-            BitmapData panoramaBitmapData = mPanoramaBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, mPanoramaBitmap.PixelFormat);
-            IntPtr panoramaPointer = panoramaBitmapData.Scan0;
+            int stride = width * 4;
 
-            size = Math.Abs(panoramaBitmapData.Stride) * height;
+            size = width * height * 4;
 
             byte[] pixels = new byte[size];
 
-            Marshal.Copy(panoramaPointer, pixels, 0, size);
-
-            mPanoramaBitmap.UnlockBits(panoramaBitmapData);
-
-
-            // the formBitmap will be updated with the transparency check values
-            BitmapData formBitmapData = mFormBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, mFormBitmap.PixelFormat);
-            IntPtr formPointer = formBitmapData.Scan0;
-
+            Console.WriteLine("Tolerance: " + mTransparencyTolerance.ToString() + " Show Sky Horizon Line: " + mBoolShowSkyHorizonLine.ToString());
 
             for (int x = 0; x < width; x++)
             {
@@ -312,9 +278,10 @@ namespace HRZ_Generator
 
                 for (int y = 0; y < height; y++)
                 {
-                    if (pixels[columnAddress + 3] > mTransparencyTolerance)
+                    
+                    if (mPanoramaImagePixels[columnAddress + 3] > mTransparencyTolerance)
                     {
-                        if (mBoolShowHorizonLine)
+                        if (mBoolShowSkyHorizonLine)
                         {
                             if (bFound == false)
                             {
@@ -323,14 +290,14 @@ namespace HRZ_Generator
                                 pixels[columnAddress + 2] = 255;
                                 pixels[columnAddress + 1] = 0;
                                 pixels[columnAddress] = 0;
-                                pixels[columnAddress - formBitmapData.Stride + 3] = 255;
-                                pixels[columnAddress - formBitmapData.Stride + 2] = 255;
-                                pixels[columnAddress - formBitmapData.Stride + 1] = 0;
-                                pixels[columnAddress - formBitmapData.Stride] = 0;
-                                pixels[columnAddress - formBitmapData.Stride - formBitmapData.Stride + 3] = 255;
-                                pixels[columnAddress - formBitmapData.Stride - formBitmapData.Stride + 2] = 255;
-                                pixels[columnAddress - formBitmapData.Stride - formBitmapData.Stride + 1] = 0;
-                                pixels[columnAddress - formBitmapData.Stride] = 0;
+                                pixels[columnAddress - stride + 3] = 255;
+                                pixels[columnAddress - stride + 2] = 255;
+                                pixels[columnAddress - stride + 1] = 0;
+                                pixels[columnAddress - stride] = 0;
+                                pixels[columnAddress - stride - stride + 3] = 255;
+                                pixels[columnAddress - stride - stride + 2] = 255;
+                                pixels[columnAddress - stride - stride + 1] = 0;
+                                pixels[columnAddress - stride] = 0;
 
                                 mHorizonData[x] = y;
                                 bFound = true;
@@ -369,15 +336,44 @@ namespace HRZ_Generator
 
 
 
-                    columnAddress += formBitmapData.Stride;
+                    columnAddress += stride;
 
                 }
             }
 
-            Marshal.Copy(pixels, 0, formPointer, size);
-            mFormBitmap.UnlockBits(formBitmapData);
+            // the formBitmap will be updated with the transparency check values
+            BitmapData destinationBitmapData = destinationBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, destinationBitmap.PixelFormat);
+            IntPtr destinationPointer = destinationBitmapData.Scan0;
 
-            mPanoramaPictureBox.Refresh();
+            Marshal.Copy(pixels, 0, destinationPointer, size);
+
+            destinationBitmap.UnlockBits(destinationBitmapData);
+        }
+
+        private void CreateBitmaps()
+        {
+            mPhotoBitmap = new Bitmap(mPanoramaFileName);
+
+            // Copy the original image to the byte array
+            BitmapData panoramaBitmapData = mPhotoBitmap.LockBits(new Rectangle(0, 0, mPhotoBitmap.Width, mPhotoBitmap.Height), ImageLockMode.ReadOnly, mPhotoBitmap.PixelFormat);
+            IntPtr panoramaPointer = panoramaBitmapData.Scan0;
+            int size = Math.Abs(panoramaBitmapData.Stride) * mPhotoBitmap.Height;
+            mPanoramaImagePixels = new byte[size];
+            Marshal.Copy(panoramaPointer, mPanoramaImagePixels, 0, size);
+            mPhotoBitmap.UnlockBits(panoramaBitmapData);
+
+            mSkyLineBitmap = new Bitmap(mPhotoBitmap.Width, mPhotoBitmap.Height);
+            mBoolShowSkyHorizonLine = true;
+            FindHorizon(mSkyLineBitmap);
+
+            mTansparencyBitmap = new Bitmap(mPhotoBitmap.Width, mPhotoBitmap.Height);
+            mBoolShowSkyHorizonLine = false;
+            FindHorizon(mTansparencyBitmap);
+
+            
+
+
+            //mFormBitmap = new Bitmap(mPanoramaFileName);
         }
 
         private void ButtonBrowse_Click(object sender, EventArgs e)
@@ -390,21 +386,18 @@ namespace HRZ_Generator
                 mPanoramaFileName = mOpenPanoramaFileDialog.FileName;
                 mOpenFilePath = Path.GetDirectoryName(mOpenPanoramaFileDialog.FileName);
 
-                mPanoramaBitmap = new Bitmap(mPanoramaFileName);
-                mFormBitmap = new Bitmap(mPanoramaFileName);
+                panel1.BackgroundImage = Image.FromFile(mPanoramaFileName);
+
+                CreateBitmaps();
 
                 mPanoramaPictureBox = new PictureBox();
                 mPanoramaPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
 
-                mPanoramaPictureBox.Dock = DockStyle.Fill;
-                mPanoramaPictureBox.Image = mFormBitmap;
 
-                Controls.Add(mPanoramaPictureBox);
-
-                if (mPanoramaBitmap.Width % 512 != 0)
+                if (mPhotoBitmap.Width % 512 != 0)
                 {
                     MessageBox.Show("The horizon file must be minimum of, and a multiple of 512 pixels wide.\n\n" +
-                        "This file is " + mPanoramaBitmap.Width + " pixels wide by " + mPanoramaBitmap.Height + " pixels high.\n\n" +
+                        "This file is " + mPhotoBitmap.Width + " pixels wide by " + mPhotoBitmap.Height + " pixels high.\n\n" +
                         "Please select a different file.\n\n", "Horizon File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     GroupBoxTolerance.Enabled = false;
@@ -415,19 +408,11 @@ namespace HRZ_Generator
 
                 GroupBoxTolerance.Enabled = true;
                 GroupBoxTheSkyX.Enabled = true;
-                ButtonWriteHRZ.Enabled = false;
+                ButtonWriteHRZ.Enabled = true;
 
             }
         }
 
-        private void TrackBarTolerance_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (mBoolTrackBarToleranceStill)
-            {
-                mBoolTrackBarToleranceStill = false;
-                FindHorizon();
-            }
-        }
 
         private void TextBoxTheSkyXTopAltitude_TextChanged(object sender, EventArgs e)
         {
@@ -483,87 +468,111 @@ namespace HRZ_Generator
 
         private void ButtonTheSkyXCalculate_Click(object sender, EventArgs e)
         {
-            double zeroDegreePixelRow;
-
-            zeroDegreePixelRow = Interpolate(0, mTheSkyXBottomAltitude, mTheSkyXTopAltitude, mPanoramaBitmap.Height, 0);
-            zeroDegreePixelRow = Math.Round(zeroDegreePixelRow);
-
-            for (int x = 0; x < mFormBitmap.Width; x++)
+            if (RadioButtonPanoImagePhoto.Checked)
             {
-                mFormBitmap.SetPixel(x, (int)zeroDegreePixelRow, Color.White);
-                mFormBitmap.SetPixel(x, (int)zeroDegreePixelRow - 1, Color.White);
+                DrawEquatorialLines(mPhotoBitmap);
+                panel1.BackgroundImage = mPhotoBitmap;
             }
 
-            using (Graphics g = Graphics.FromImage(mFormBitmap))
+            if (RadioButtonPanoImageTransparency.Checked)
             {
-                g.DrawString("Horizon", new Font("Tahoma", 36), Brushes.White, mFormBitmap.Width >> 1, (float)zeroDegreePixelRow);
+                DrawEquatorialLines(mTansparencyBitmap);
+                panel1.BackgroundImage = mTansparencyBitmap;
+            }
+
+            if (RadioButtonPanoImageSkyHorizon.Checked)
+            {
+                DrawEquatorialLines(mSkyLineBitmap);
+                panel1.BackgroundImage = mSkyLineBitmap;
+            }
+
+            panel1.Invalidate(false);
+
+            return;
+
+
+
+            double zeroDegreePixelRow;
+
+            zeroDegreePixelRow = Interpolate(0, mTheSkyXBottomAltitude, mTheSkyXTopAltitude, mPhotoBitmap.Height, 0);
+            zeroDegreePixelRow = Math.Round(zeroDegreePixelRow);
+
+            for (int x = 0; x < mTansparencyBitmap.Width; x++)
+            {
+                mTansparencyBitmap.SetPixel(x, (int)zeroDegreePixelRow, Color.White);
+                mTansparencyBitmap.SetPixel(x, (int)zeroDegreePixelRow - 1, Color.White);
+            }
+
+            using (Graphics g = Graphics.FromImage(mTansparencyBitmap))
+            {
+                g.DrawString("Horizon", new Font("Tahoma", 36), Brushes.White, mTansparencyBitmap.Width >> 1, (float)zeroDegreePixelRow);
             }
 
             double merdianDegrees = (Math.Round(mTheSkyXLeftRightAzimuth) < 1) ? 360 : mTheSkyXLeftRightAzimuth;
 
 
-            int meridainColumn = (int)Math.Round(Interpolate(360 - mTheSkyXLeftRightAzimuth, 0, 360, 0, mFormBitmap.Width - 1));
+            int meridainColumn = (int)Math.Round(Interpolate(360 - mTheSkyXLeftRightAzimuth, 0, 360, 0, mTansparencyBitmap.Width - 1));
 
-            
+
 
             if (meridainColumn == 0)
             {
-                mFormBitmap.SetPixel(meridainColumn, 0, Color.White);
-                mFormBitmap.SetPixel(meridainColumn, 1, Color.White);
-                mFormBitmap.SetPixel(meridainColumn, 2, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn, 0, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn, 1, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn, 2, Color.White);
             }
 
-            if (meridainColumn == mFormBitmap.Width - 1)
+            if (meridainColumn == mTansparencyBitmap.Width - 1)
             {
-                mFormBitmap.SetPixel(meridainColumn, mFormBitmap.Width - 2, Color.White);
-                mFormBitmap.SetPixel(meridainColumn, mFormBitmap.Width - 1, Color.White);
-                mFormBitmap.SetPixel(meridainColumn, mFormBitmap.Width, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn, mTansparencyBitmap.Width - 2, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn, mTansparencyBitmap.Width - 1, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn, mTansparencyBitmap.Width, Color.White);
             }
 
-            for (int y = 0; y < mFormBitmap.Height; y++ )
+            for (int y = 0; y < mTansparencyBitmap.Height; y++)
             {
-                mFormBitmap.SetPixel(meridainColumn, y, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn, y, Color.White);
 
                 if (meridainColumn == 0)
                 {
-                    mFormBitmap.SetPixel(meridainColumn,     y, Color.White);
-                    mFormBitmap.SetPixel(meridainColumn + 1, y, Color.White);
-                    mFormBitmap.SetPixel(meridainColumn + 2, y, Color.White);
-                    continue;
-                }
-                
-                if (meridainColumn == mFormBitmap.Width - 1)
-                {
-                    mFormBitmap.SetPixel(meridainColumn - 3, y, Color.White);
-                    mFormBitmap.SetPixel(meridainColumn - 2, y, Color.White);
-                    mFormBitmap.SetPixel(meridainColumn - 1, y, Color.White);
+                    mTansparencyBitmap.SetPixel(meridainColumn, y, Color.White);
+                    mTansparencyBitmap.SetPixel(meridainColumn + 1, y, Color.White);
+                    mTansparencyBitmap.SetPixel(meridainColumn + 2, y, Color.White);
                     continue;
                 }
 
-                mFormBitmap.SetPixel(meridainColumn - 1, y, Color.White);
-                mFormBitmap.SetPixel(meridainColumn - 0, y, Color.White);
-                mFormBitmap.SetPixel(meridainColumn + 1, y, Color.White);
+                if (meridainColumn == mTansparencyBitmap.Width - 1)
+                {
+                    mTansparencyBitmap.SetPixel(meridainColumn - 3, y, Color.White);
+                    mTansparencyBitmap.SetPixel(meridainColumn - 2, y, Color.White);
+                    mTansparencyBitmap.SetPixel(meridainColumn - 1, y, Color.White);
+                    continue;
+                }
+
+                mTansparencyBitmap.SetPixel(meridainColumn - 1, y, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn - 0, y, Color.White);
+                mTansparencyBitmap.SetPixel(meridainColumn + 1, y, Color.White);
             }
 
             if (meridainColumn < 30)
             {
-                using (Graphics g = Graphics.FromImage(mFormBitmap))
+                using (Graphics g = Graphics.FromImage(mTansparencyBitmap))
                 {
-                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mFormBitmap.Height - 10);
+                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mTansparencyBitmap.Height - 10);
                 }
             }
-            else if (meridainColumn < mFormBitmap.Width - 1 - 30)
+            else if (meridainColumn < mTansparencyBitmap.Width - 1 - 30)
             {
-                using (Graphics g = Graphics.FromImage(mFormBitmap))
+                using (Graphics g = Graphics.FromImage(mTansparencyBitmap))
                 {
-                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mFormBitmap.Height - 10);
+                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mTansparencyBitmap.Height - 10);
                 }
             }
             else
             {
-                using (Graphics g = Graphics.FromImage(mFormBitmap))
+                using (Graphics g = Graphics.FromImage(mTansparencyBitmap))
                 {
-                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mFormBitmap.Height - 10);
+                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mTansparencyBitmap.Height - 10);
                 }
             }
 
@@ -594,22 +603,19 @@ namespace HRZ_Generator
             if (result == DialogResult.OK)
             {
                 mPanoramaFileName = mOpenPanoramaFileDialog.FileName;
-                mPanoramaBitmap = new Bitmap(mPanoramaFileName);
-                mFormBitmap = new Bitmap(mPanoramaFileName);
+                mPhotoBitmap = new Bitmap(mPanoramaFileName);
+                mTansparencyBitmap = new Bitmap(mPanoramaFileName);
 
                 mPanoramaPictureBox = new PictureBox();
                 mPanoramaPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
                 mPanoramaPictureBox.Dock = DockStyle.Fill;
-
-                mPanoramaPictureBox.Image = mFormBitmap;
-
+                mPanoramaPictureBox.Image = mTansparencyBitmap;
                 Controls.Add(mPanoramaPictureBox);
 
-                if (mPanoramaBitmap.Width % 512 != 0)
+                if (mPhotoBitmap.Width % 512 != 0)
                 {
                     MessageBox.Show("The horizon file must be a multiple of 512 pixels wide.\n\n" +
-                        "This file is " + mPanoramaBitmap.Width + " pixels wide by " + mPanoramaBitmap.Height + " pixels high.\n\n" +
+                        "This file is " + mPhotoBitmap.Width + " pixels wide by " + mPhotoBitmap.Height + " pixels high.\n\n" +
                         "Please select a different file.\n\n", "Horizon File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     GroupBoxTolerance.Enabled = false;
@@ -650,40 +656,59 @@ namespace HRZ_Generator
 
         private void RadioButtonShowPhoto_CheckedChanged(object sender, EventArgs e)
         {
-            using (Graphics g = mPanoramaPictureBox.CreateGraphics())
+            if (!RadioButtonPanoImagePhoto.Checked)
             {
-                g.Clear(Color.Transparent);
-                Pen p = new Pen(Color.Red, 2.0f);
-
-                for (int n = 1; n <= 50; n++)
-                {
-                    g.DrawLine(p, n * (Cursor.Position.X), Cursor.Position.Y - 30.0f, n * (Cursor.Position.X), Cursor.Position.Y + 30.0f);
-
-                }
+                return;
             }
 
+            panel1.BackgroundImage = mPhotoBitmap;
         }
 
         private void RadioButtonShowTransparency_CheckedChanged(object sender, EventArgs e)
         {
-            mBoolShowHorizonLine = false;
 
-            FindHorizon();
+            if (!RadioButtonPanoImageTransparency.Checked)
+            {
+                return;
+            }
 
-            GroupBoxTolerance.Enabled = true;
-            GroupBoxTheSkyX.Enabled = true;
-            ButtonWriteHRZ.Enabled = false;
+            panel1.BackgroundImage = mTansparencyBitmap;
         }
 
         private void RadioButtonShowSkyHorizon_CheckedChanged(object sender, EventArgs e)
         {
-            mBoolShowHorizonLine = true;
+            if (!RadioButtonPanoImageSkyHorizon.Checked)
+            {
+                return;
+            }
 
-            FindHorizon();
+            panel1.BackgroundImage = mSkyLineBitmap;
+        }
 
-            GroupBoxTolerance.Enabled = true;
-            GroupBoxTheSkyX.Enabled = true;
-            ButtonWriteHRZ.Enabled = false;
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            
+        }
+
+        private void RadioButtonHorizonImageHide_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DrawEquatorialLines(Bitmap destinationBitmap)
+        {
+            double zeroDegreePixelRow;
+
+            zeroDegreePixelRow = Interpolate(0, mTheSkyXBottomAltitude, mTheSkyXTopAltitude, mPhotoBitmap.Height, 0);
+            zeroDegreePixelRow = Math.Round(zeroDegreePixelRow);
+
+            using (Graphics g = Graphics.FromImage(destinationBitmap))
+            {
+                Pen pen = new Pen(Color.FromArgb(255, 255, 255, 255), 2);
+                g.DrawLine(pen, 0, (float)zeroDegreePixelRow, destinationBitmap.Width, (float)zeroDegreePixelRow);
+
+                g.DrawString("Horizon", new Font("Tahoma", 36), Brushes.White, destinationBitmap.Width >> 1, (float)zeroDegreePixelRow);
+            }
         }
     }
 }
