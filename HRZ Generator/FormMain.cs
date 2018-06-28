@@ -34,11 +34,11 @@ namespace HRZ_Generator
             {
                 System.Deployment.Application.ApplicationDeployment ad = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
                 Version version = ad.CurrentVersion;
-                Text = "The SkyX Horizon File Generator - Version: " + version.ToString();
+                Text = "The SkyX Horizon Tool - Version: " + version.ToString();
             }
             else
             {
-                Text = "The SkyX Horizon File Generator - Version: " + System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString("yyyy.MM.dd - HHMM");
+                Text = "The SkyX Horizon Tool - Version: " + System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString("yyyy.MM.dd - HHMM");
             }
         }
         void MainForm_Load(object sender, EventArgs e)
@@ -75,26 +75,6 @@ namespace HRZ_Generator
             TrackBarTransparencyTolerance.Value = Convert.ToInt32(mTransparencyTolerance);
         }
 
-        private void ButtonShowTransparency_Click(object sender, EventArgs e)
-        {
-            mBoolShowHorizonLine = false;
-
-            FindHorizon();
-
-            GroupBoxTolerance.Enabled = true;
-            GroupBoxTheSkyX.Enabled = true;
-            ButtonWriteHRZ.Enabled = false;
-        }
-        private void ButtonShowHorizon_Click(object sender, EventArgs e)
-        {
-            mBoolShowHorizonLine = true;
-
-            FindHorizon();
-
-            GroupBoxTolerance.Enabled = true;
-            GroupBoxTheSkyX.Enabled = true;
-            ButtonWriteHRZ.Enabled = false;
-        }
         private void TrackBarTolerance_Scroll(object sender, EventArgs e)
         {
             mTransparencyTolerance = TrackBarTransparencyTolerance.Value;
@@ -516,8 +496,80 @@ namespace HRZ_Generator
 
             using (Graphics g = Graphics.FromImage(mFormBitmap))
             {
-                g.DrawString("Horizon", new Font("Tahoma", 36), Brushes.White, mPanoramaBitmap.Width >> 1, (float)zeroDegreePixelRow);
+                g.DrawString("Horizon", new Font("Tahoma", 36), Brushes.White, mFormBitmap.Width >> 1, (float)zeroDegreePixelRow);
             }
+
+            double merdianDegrees = (Math.Round(mTheSkyXLeftRightAzimuth) < 1) ? 360 : mTheSkyXLeftRightAzimuth;
+
+
+            int meridainColumn = (int)Math.Round(Interpolate(360 - mTheSkyXLeftRightAzimuth, 0, 360, 0, mFormBitmap.Width - 1));
+
+            
+
+            if (meridainColumn == 0)
+            {
+                mFormBitmap.SetPixel(meridainColumn, 0, Color.White);
+                mFormBitmap.SetPixel(meridainColumn, 1, Color.White);
+                mFormBitmap.SetPixel(meridainColumn, 2, Color.White);
+            }
+
+            if (meridainColumn == mFormBitmap.Width - 1)
+            {
+                mFormBitmap.SetPixel(meridainColumn, mFormBitmap.Width - 2, Color.White);
+                mFormBitmap.SetPixel(meridainColumn, mFormBitmap.Width - 1, Color.White);
+                mFormBitmap.SetPixel(meridainColumn, mFormBitmap.Width, Color.White);
+            }
+
+            for (int y = 0; y < mFormBitmap.Height; y++ )
+            {
+                mFormBitmap.SetPixel(meridainColumn, y, Color.White);
+
+                if (meridainColumn == 0)
+                {
+                    mFormBitmap.SetPixel(meridainColumn,     y, Color.White);
+                    mFormBitmap.SetPixel(meridainColumn + 1, y, Color.White);
+                    mFormBitmap.SetPixel(meridainColumn + 2, y, Color.White);
+                    continue;
+                }
+                
+                if (meridainColumn == mFormBitmap.Width - 1)
+                {
+                    mFormBitmap.SetPixel(meridainColumn - 3, y, Color.White);
+                    mFormBitmap.SetPixel(meridainColumn - 2, y, Color.White);
+                    mFormBitmap.SetPixel(meridainColumn - 1, y, Color.White);
+                    continue;
+                }
+
+                mFormBitmap.SetPixel(meridainColumn - 1, y, Color.White);
+                mFormBitmap.SetPixel(meridainColumn - 0, y, Color.White);
+                mFormBitmap.SetPixel(meridainColumn + 1, y, Color.White);
+            }
+
+            if (meridainColumn < 30)
+            {
+                using (Graphics g = Graphics.FromImage(mFormBitmap))
+                {
+                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mFormBitmap.Height - 10);
+                }
+            }
+            else if (meridainColumn < mFormBitmap.Width - 1 - 30)
+            {
+                using (Graphics g = Graphics.FromImage(mFormBitmap))
+                {
+                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mFormBitmap.Height - 10);
+                }
+            }
+            else
+            {
+                using (Graphics g = Graphics.FromImage(mFormBitmap))
+                {
+                    g.DrawString("Meridian", new Font("Tahoma", 36), Brushes.White, meridainColumn, (float)mFormBitmap.Height - 10);
+                }
+            }
+
+
+
+
             mPanoramaPictureBox.Refresh();
 
             ButtonWriteHRZ.Enabled = true;
@@ -594,6 +646,44 @@ namespace HRZ_Generator
             TextBoxTheSkyXTopAltitude.Text = mTheSkyXTopAltitude.ToString("F1");
             TextBoxTheSkyXBottomAltitude.Text = mTheSkyXBottomAltitude.ToString("F1");
             TrackBarTransparencyTolerance.Value = Convert.ToInt32(mTransparencyTolerance);
+        }
+
+        private void RadioButtonShowPhoto_CheckedChanged(object sender, EventArgs e)
+        {
+            using (Graphics g = mPanoramaPictureBox.CreateGraphics())
+            {
+                g.Clear(Color.Transparent);
+                Pen p = new Pen(Color.Red, 2.0f);
+
+                for (int n = 1; n <= 50; n++)
+                {
+                    g.DrawLine(p, n * (Cursor.Position.X), Cursor.Position.Y - 30.0f, n * (Cursor.Position.X), Cursor.Position.Y + 30.0f);
+
+                }
+            }
+
+        }
+
+        private void RadioButtonShowTransparency_CheckedChanged(object sender, EventArgs e)
+        {
+            mBoolShowHorizonLine = false;
+
+            FindHorizon();
+
+            GroupBoxTolerance.Enabled = true;
+            GroupBoxTheSkyX.Enabled = true;
+            ButtonWriteHRZ.Enabled = false;
+        }
+
+        private void RadioButtonShowSkyHorizon_CheckedChanged(object sender, EventArgs e)
+        {
+            mBoolShowHorizonLine = true;
+
+            FindHorizon();
+
+            GroupBoxTolerance.Enabled = true;
+            GroupBoxTheSkyX.Enabled = true;
+            ButtonWriteHRZ.Enabled = false;
         }
     }
 }
