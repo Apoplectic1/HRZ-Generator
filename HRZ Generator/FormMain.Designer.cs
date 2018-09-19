@@ -32,9 +32,7 @@ namespace HRZ_Generator
         {
             this.ButtonBrowse = new System.Windows.Forms.Button();
             this.TextBoxTheSkyXTopAltitude = new System.Windows.Forms.TextBox();
-            this.LabelTheSkyXTop = new System.Windows.Forms.Label();
             this.TextBoxTheSkyXBottomAltitude = new System.Windows.Forms.TextBox();
-            this.LabelTheSkyXBottom = new System.Windows.Forms.Label();
             this.ButtonWriteHRZ = new System.Windows.Forms.Button();
             this.TrackBarTransparencyTolerance = new System.Windows.Forms.TrackBar();
             this.label3 = new System.Windows.Forms.Label();
@@ -48,12 +46,16 @@ namespace HRZ_Generator
             this.RadioButtonPanoImageTransparency = new System.Windows.Forms.RadioButton();
             this.RadioButtonPanoImagePhoto = new System.Windows.Forms.RadioButton();
             this.GroupBoxTheSkyX = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.TrackBarSkyXTop = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
-            this.ButtonTheSkyXCalculate = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.TrackBarSkyXBottom = new System.Windows.Forms.TrackBar();
+            this.label2 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.TrackBarSkyXLeftRight = new System.Windows.Forms.TrackBar();
+            this.label5 = new System.Windows.Forms.Label();
             this.TextBoxTheSkyXLeftRightAzimuth = new System.Windows.Forms.TextBox();
-            this.LabelTheSkyXLeftRight = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -71,6 +73,11 @@ namespace HRZ_Generator
             this.groupBox2.SuspendLayout();
             this.GroupBoxPanoramaImage.SuspendLayout();
             this.GroupBoxTheSkyX.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarSkyXTop)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarSkyXBottom)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarSkyXLeftRight)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.GroupBoxPanoramaControls.SuspendLayout();
@@ -78,7 +85,7 @@ namespace HRZ_Generator
             // 
             // ButtonBrowse
             // 
-            this.ButtonBrowse.Location = new System.Drawing.Point(16, 49);
+            this.ButtonBrowse.Location = new System.Drawing.Point(19, 19);
             this.ButtonBrowse.Name = "ButtonBrowse";
             this.ButtonBrowse.Size = new System.Drawing.Size(88, 43);
             this.ButtonBrowse.TabIndex = 1;
@@ -88,46 +95,28 @@ namespace HRZ_Generator
             // 
             // TextBoxTheSkyXTopAltitude
             // 
-            this.TextBoxTheSkyXTopAltitude.Location = new System.Drawing.Point(21, 40);
+            this.TextBoxTheSkyXTopAltitude.Location = new System.Drawing.Point(151, 49);
             this.TextBoxTheSkyXTopAltitude.Name = "TextBoxTheSkyXTopAltitude";
-            this.TextBoxTheSkyXTopAltitude.Size = new System.Drawing.Size(76, 20);
+            this.TextBoxTheSkyXTopAltitude.Size = new System.Drawing.Size(50, 20);
             this.TextBoxTheSkyXTopAltitude.TabIndex = 2;
             this.TextBoxTheSkyXTopAltitude.Text = "60.0";
             this.TextBoxTheSkyXTopAltitude.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxTheSkyXTopAltitude.TextChanged += new System.EventHandler(this.TextBoxTheSkyXTopAltitude_TextChanged);
             // 
-            // LabelTheSkyXTop
-            // 
-            this.LabelTheSkyXTop.AutoSize = true;
-            this.LabelTheSkyXTop.Location = new System.Drawing.Point(23, 23);
-            this.LabelTheSkyXTop.Name = "LabelTheSkyXTop";
-            this.LabelTheSkyXTop.Size = new System.Drawing.Size(73, 13);
-            this.LabelTheSkyXTop.TabIndex = 3;
-            this.LabelTheSkyXTop.Text = "Top TrackBar";
-            // 
             // TextBoxTheSkyXBottomAltitude
             // 
-            this.TextBoxTheSkyXBottomAltitude.Location = new System.Drawing.Point(120, 40);
+            this.TextBoxTheSkyXBottomAltitude.Location = new System.Drawing.Point(138, 34);
             this.TextBoxTheSkyXBottomAltitude.Name = "TextBoxTheSkyXBottomAltitude";
-            this.TextBoxTheSkyXBottomAltitude.Size = new System.Drawing.Size(76, 20);
+            this.TextBoxTheSkyXBottomAltitude.Size = new System.Drawing.Size(50, 20);
             this.TextBoxTheSkyXBottomAltitude.TabIndex = 4;
             this.TextBoxTheSkyXBottomAltitude.Text = "-60.0";
             this.TextBoxTheSkyXBottomAltitude.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxTheSkyXBottomAltitude.TextChanged += new System.EventHandler(this.TextBoxTheSkyXBottomAltitude_TextChanged);
             // 
-            // LabelTheSkyXBottom
-            // 
-            this.LabelTheSkyXBottom.AutoSize = true;
-            this.LabelTheSkyXBottom.Location = new System.Drawing.Point(115, 23);
-            this.LabelTheSkyXBottom.Name = "LabelTheSkyXBottom";
-            this.LabelTheSkyXBottom.Size = new System.Drawing.Size(87, 13);
-            this.LabelTheSkyXBottom.TabIndex = 5;
-            this.LabelTheSkyXBottom.Text = "Bottom TrackBar";
-            // 
             // ButtonWriteHRZ
             // 
             this.ButtonWriteHRZ.Enabled = false;
-            this.ButtonWriteHRZ.Location = new System.Drawing.Point(1101, 49);
+            this.ButtonWriteHRZ.Location = new System.Drawing.Point(9, 69);
             this.ButtonWriteHRZ.Name = "ButtonWriteHRZ";
             this.ButtonWriteHRZ.Size = new System.Drawing.Size(118, 43);
             this.ButtonWriteHRZ.TabIndex = 6;
@@ -137,10 +126,10 @@ namespace HRZ_Generator
             // 
             // TrackBarTransparencyTolerance
             // 
-            this.TrackBarTransparencyTolerance.Location = new System.Drawing.Point(6, 28);
+            this.TrackBarTransparencyTolerance.Location = new System.Drawing.Point(21, 28);
             this.TrackBarTransparencyTolerance.Maximum = 255;
             this.TrackBarTransparencyTolerance.Name = "TrackBarTransparencyTolerance";
-            this.TrackBarTransparencyTolerance.Size = new System.Drawing.Size(207, 45);
+            this.TrackBarTransparencyTolerance.Size = new System.Drawing.Size(176, 45);
             this.TrackBarTransparencyTolerance.TabIndex = 7;
             this.TrackBarTransparencyTolerance.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.TrackBarTransparencyTolerance.Value = 20;
@@ -162,9 +151,9 @@ namespace HRZ_Generator
             this.GroupBoxTolerance.Controls.Add(this.TrackBarTransparencyTolerance);
             this.GroupBoxTolerance.Controls.Add(this.label3);
             this.GroupBoxTolerance.Enabled = false;
-            this.GroupBoxTolerance.Location = new System.Drawing.Point(126, 19);
+            this.GroupBoxTolerance.Location = new System.Drawing.Point(139, 19);
             this.GroupBoxTolerance.Name = "GroupBoxTolerance";
-            this.GroupBoxTolerance.Size = new System.Drawing.Size(533, 93);
+            this.GroupBoxTolerance.Size = new System.Drawing.Size(482, 93);
             this.GroupBoxTolerance.TabIndex = 11;
             this.GroupBoxTolerance.TabStop = false;
             this.GroupBoxTolerance.Text = "Panoramic Horizon Photograph Transparency";
@@ -174,9 +163,9 @@ namespace HRZ_Generator
             this.groupBox2.Controls.Add(this.RadioButtonHorizonImageSkyHorizonMask);
             this.groupBox2.Controls.Add(this.RadioButtonHorizonImageMeridianHorizon);
             this.groupBox2.Controls.Add(this.RadioButtonHorizonImageHide);
-            this.groupBox2.Location = new System.Drawing.Point(374, 11);
+            this.groupBox2.Location = new System.Drawing.Point(334, 11);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(150, 75);
+            this.groupBox2.Size = new System.Drawing.Size(138, 75);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Equatorial Lines";
@@ -219,7 +208,7 @@ namespace HRZ_Generator
             this.GroupBoxPanoramaImage.Controls.Add(this.RadioButtonPanoImageSkyHorizon);
             this.GroupBoxPanoramaImage.Controls.Add(this.RadioButtonPanoImageTransparency);
             this.GroupBoxPanoramaImage.Controls.Add(this.RadioButtonPanoImagePhoto);
-            this.GroupBoxPanoramaImage.Location = new System.Drawing.Point(241, 11);
+            this.GroupBoxPanoramaImage.Location = new System.Drawing.Point(207, 11);
             this.GroupBoxPanoramaImage.Name = "GroupBoxPanoramaImage";
             this.GroupBoxPanoramaImage.Size = new System.Drawing.Size(111, 76);
             this.GroupBoxPanoramaImage.TabIndex = 11;
@@ -263,79 +252,123 @@ namespace HRZ_Generator
             // 
             // GroupBoxTheSkyX
             // 
-            this.GroupBoxTheSkyX.Controls.Add(this.label5);
-            this.GroupBoxTheSkyX.Controls.Add(this.label2);
+            this.GroupBoxTheSkyX.Controls.Add(this.TrackBarSkyXTop);
             this.GroupBoxTheSkyX.Controls.Add(this.label1);
-            this.GroupBoxTheSkyX.Controls.Add(this.ButtonTheSkyXCalculate);
-            this.GroupBoxTheSkyX.Controls.Add(this.TextBoxTheSkyXLeftRightAzimuth);
-            this.GroupBoxTheSkyX.Controls.Add(this.LabelTheSkyXLeftRight);
-            this.GroupBoxTheSkyX.Controls.Add(this.LabelTheSkyXTop);
             this.GroupBoxTheSkyX.Controls.Add(this.TextBoxTheSkyXTopAltitude);
-            this.GroupBoxTheSkyX.Controls.Add(this.TextBoxTheSkyXBottomAltitude);
-            this.GroupBoxTheSkyX.Controls.Add(this.LabelTheSkyXBottom);
+            this.GroupBoxTheSkyX.Controls.Add(this.groupBox1);
+            this.GroupBoxTheSkyX.Controls.Add(this.groupBox3);
+            this.GroupBoxTheSkyX.Controls.Add(this.groupBox4);
             this.GroupBoxTheSkyX.Enabled = false;
-            this.GroupBoxTheSkyX.Location = new System.Drawing.Point(665, 19);
+            this.GroupBoxTheSkyX.Location = new System.Drawing.Point(632, 19);
             this.GroupBoxTheSkyX.Name = "GroupBoxTheSkyX";
-            this.GroupBoxTheSkyX.Size = new System.Drawing.Size(414, 93);
+            this.GroupBoxTheSkyX.Size = new System.Drawing.Size(609, 93);
             this.GroupBoxTheSkyX.TabIndex = 12;
             this.GroupBoxTheSkyX.TabStop = false;
             this.GroupBoxTheSkyX.Text = "The SkyX Horizon Photograph Settings";
             // 
-            // label5
+            // TrackBarSkyXTop
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(238, 62);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 13);
-            this.label5.TabIndex = 11;
-            this.label5.Text = "Azimuth";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(137, 63);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(42, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Altitude";
+            this.TrackBarSkyXTop.Location = new System.Drawing.Point(17, 34);
+            this.TrackBarSkyXTop.Maximum = 450;
+            this.TrackBarSkyXTop.Name = "TrackBarSkyXTop";
+            this.TrackBarSkyXTop.Size = new System.Drawing.Size(127, 45);
+            this.TrackBarSkyXTop.TabIndex = 12;
+            this.TrackBarSkyXTop.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.TrackBarSkyXTop.Value = 45;
+            this.TrackBarSkyXTop.Scroll += new System.EventHandler(this.TrackBarSkyXTop_Scroll);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(38, 65);
+            this.label1.Location = new System.Drawing.Point(155, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 13);
             this.label1.TabIndex = 9;
             this.label1.Text = "Altitude";
             // 
-            // ButtonTheSkyXCalculate
+            // groupBox1
             // 
-            this.ButtonTheSkyXCalculate.Location = new System.Drawing.Point(317, 25);
-            this.ButtonTheSkyXCalculate.Name = "ButtonTheSkyXCalculate";
-            this.ButtonTheSkyXCalculate.Size = new System.Drawing.Size(77, 40);
-            this.ButtonTheSkyXCalculate.TabIndex = 8;
-            this.ButtonTheSkyXCalculate.Text = "Calculate";
-            this.ButtonTheSkyXCalculate.UseVisualStyleBackColor = true;
-            this.ButtonTheSkyXCalculate.Click += new System.EventHandler(this.ButtonTheSkyXCalculate_Click);
+            this.groupBox1.Location = new System.Drawing.Point(13, 21);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(195, 65);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Top TrackBar";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.TrackBarSkyXBottom);
+            this.groupBox3.Controls.Add(this.label2);
+            this.groupBox3.Controls.Add(this.TextBoxTheSkyXBottomAltitude);
+            this.groupBox3.Location = new System.Drawing.Point(210, 21);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(195, 65);
+            this.groupBox3.TabIndex = 16;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Bottom TrackBar";
+            // 
+            // TrackBarSkyXBottom
+            // 
+            this.TrackBarSkyXBottom.Location = new System.Drawing.Point(6, 13);
+            this.TrackBarSkyXBottom.Maximum = 1;
+            this.TrackBarSkyXBottom.Minimum = -450;
+            this.TrackBarSkyXBottom.Name = "TrackBarSkyXBottom";
+            this.TrackBarSkyXBottom.Size = new System.Drawing.Size(127, 45);
+            this.TrackBarSkyXBottom.TabIndex = 13;
+            this.TrackBarSkyXBottom.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.TrackBarSkyXBottom.Value = -60;
+            this.TrackBarSkyXBottom.Scroll += new System.EventHandler(this.TrackBarSkyXBottom_Scroll);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(142, 16);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(42, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Altitude";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.TrackBarSkyXLeftRight);
+            this.groupBox4.Controls.Add(this.label5);
+            this.groupBox4.Controls.Add(this.TextBoxTheSkyXLeftRightAzimuth);
+            this.groupBox4.Location = new System.Drawing.Point(409, 21);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(195, 65);
+            this.groupBox4.TabIndex = 17;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Left/Right TrackBar";
+            // 
+            // TrackBarSkyXLeftRight
+            // 
+            this.TrackBarSkyXLeftRight.Location = new System.Drawing.Point(6, 13);
+            this.TrackBarSkyXLeftRight.Maximum = 450;
+            this.TrackBarSkyXLeftRight.Name = "TrackBarSkyXLeftRight";
+            this.TrackBarSkyXLeftRight.Size = new System.Drawing.Size(127, 45);
+            this.TrackBarSkyXLeftRight.TabIndex = 14;
+            this.TrackBarSkyXLeftRight.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.TrackBarSkyXLeftRight.Value = 45;
+            this.TrackBarSkyXLeftRight.Scroll += new System.EventHandler(this.TrackBarSkyXLeftRight_Scroll);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(139, 12);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(44, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Azimuth";
             // 
             // TextBoxTheSkyXLeftRightAzimuth
             // 
-            this.TextBoxTheSkyXLeftRightAzimuth.Location = new System.Drawing.Point(222, 39);
+            this.TextBoxTheSkyXLeftRightAzimuth.Location = new System.Drawing.Point(136, 29);
             this.TextBoxTheSkyXLeftRightAzimuth.Name = "TextBoxTheSkyXLeftRightAzimuth";
-            this.TextBoxTheSkyXLeftRightAzimuth.Size = new System.Drawing.Size(76, 20);
+            this.TextBoxTheSkyXLeftRightAzimuth.Size = new System.Drawing.Size(50, 20);
             this.TextBoxTheSkyXLeftRightAzimuth.TabIndex = 7;
             this.TextBoxTheSkyXLeftRightAzimuth.Text = "0.0";
             this.TextBoxTheSkyXLeftRightAzimuth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxTheSkyXLeftRightAzimuth.TextChanged += new System.EventHandler(this.TextBoxTheSkyXLeftRightAzimuth_TextChanged);
-            // 
-            // LabelTheSkyXLeftRight
-            // 
-            this.LabelTheSkyXLeftRight.AutoSize = true;
-            this.LabelTheSkyXLeftRight.Location = new System.Drawing.Point(209, 23);
-            this.LabelTheSkyXLeftRight.Name = "LabelTheSkyXLeftRight";
-            this.LabelTheSkyXLeftRight.Size = new System.Drawing.Size(102, 13);
-            this.LabelTheSkyXLeftRight.TabIndex = 6;
-            this.LabelTheSkyXLeftRight.Text = "Left/Right TrackBar";
             // 
             // statusStrip1
             // 
@@ -467,6 +500,13 @@ namespace HRZ_Generator
             this.GroupBoxPanoramaImage.PerformLayout();
             this.GroupBoxTheSkyX.ResumeLayout(false);
             this.GroupBoxTheSkyX.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarSkyXTop)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarSkyXBottom)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarSkyXLeftRight)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -480,17 +520,13 @@ namespace HRZ_Generator
         #endregion
         private System.Windows.Forms.Button ButtonBrowse;
         private System.Windows.Forms.TextBox TextBoxTheSkyXTopAltitude;
-        private System.Windows.Forms.Label LabelTheSkyXTop;
         private System.Windows.Forms.TextBox TextBoxTheSkyXBottomAltitude;
-        private System.Windows.Forms.Label LabelTheSkyXBottom;
         private System.Windows.Forms.Button ButtonWriteHRZ;
         private System.Windows.Forms.TrackBar TrackBarTransparencyTolerance;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox GroupBoxTolerance;
         private System.Windows.Forms.GroupBox GroupBoxTheSkyX;
         private System.Windows.Forms.TextBox TextBoxTheSkyXLeftRightAzimuth;
-        private System.Windows.Forms.Label LabelTheSkyXLeftRight;
-        private System.Windows.Forms.Button ButtonTheSkyXCalculate;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -514,6 +550,12 @@ namespace HRZ_Generator
         private System.Windows.Forms.RadioButton RadioButtonHorizonImageSkyHorizonMask;
         private System.Windows.Forms.RadioButton RadioButtonHorizonImageMeridianHorizon;
         private System.Windows.Forms.RadioButton RadioButtonHorizonImageHide;
+        private TrackBar TrackBarSkyXTop;
+        private GroupBox groupBox1;
+        private GroupBox groupBox3;
+        private TrackBar TrackBarSkyXBottom;
+        private GroupBox groupBox4;
+        private TrackBar TrackBarSkyXLeftRight;
     }
 }
 

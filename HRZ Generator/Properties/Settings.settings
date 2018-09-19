@@ -6,10 +6,10 @@
       <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="Persist_SkyXTopAltitude" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">60</Value>
+      <Value Profile="(Default)">45</Value>
     </Setting>
     <Setting Name="Pesist_SkyXBottomAltitude" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">-60</Value>
+      <Value Profile="(Default)">-45</Value>
     </Setting>
     <Setting Name="Persist_SkyXLeftRightAzimuth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>

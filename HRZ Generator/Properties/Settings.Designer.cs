@@ -37,7 +37,7 @@ namespace HRZ_Generator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("45")]
         public double Persist_SkyXTopAltitude {
             get {
                 return ((double)(this["Persist_SkyXTopAltitude"]));
@@ -49,7 +49,7 @@ namespace HRZ_Generator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-45")]
         public double Pesist_SkyXBottomAltitude {
             get {
                 return ((double)(this["Pesist_SkyXBottomAltitude"]));

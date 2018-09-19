@@ -22,8 +22,8 @@ namespace HRZ_Generator
         private PictureBox mPanoramaPictureBox;
         private int[] mHorizonData = null;
         private bool mBoolShowSkyHorizonLine;
-        private double mTheSkyXTopAltitude = 60.0;
-        private double mTheSkyXBottomAltitude = -60.0;
+        private double mTheSkyXTopAltitude = 45.0;
+        private double mTheSkyXBottomAltitude = -45.0;
         private double mTheSkyXLeftRightAzimuth = 0.0;
         private Timer mScrollTimer = null;
         private byte[] mPanoramaImagePixels = null;
@@ -90,7 +90,7 @@ namespace HRZ_Generator
             TextBoxTheSkyXLeftRightAzimuth.Text = mTheSkyXLeftRightAzimuth.ToString("F1");
             TextBoxTheSkyXTopAltitude.Text = mTheSkyXTopAltitude.ToString("F1");
             TextBoxTheSkyXBottomAltitude.Text = mTheSkyXBottomAltitude.ToString("F1");
-            TrackBarTransparencyTolerance.Value = Convert.ToInt32(mTransparencyTolerance);
+            //TrackBarTransparencyTolerance.Value = Convert.ToInt32(mTransparencyTolerance);
         }
 
         private void TrackBarTolerance_Scroll(object sender, EventArgs e)
@@ -644,8 +644,8 @@ namespace HRZ_Generator
         private void SetDefaultsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mTheSkyXLeftRightAzimuth = 0;
-            mTheSkyXTopAltitude = 60;
-            mTheSkyXBottomAltitude = -60;
+            mTheSkyXTopAltitude = 45;
+            mTheSkyXBottomAltitude = -45;
             mTransparencyTolerance = 20;
 
             TextBoxTheSkyXLeftRightAzimuth.Text = mTheSkyXLeftRightAzimuth.ToString("F1");
@@ -702,12 +702,165 @@ namespace HRZ_Generator
             zeroDegreePixelRow = Interpolate(0, mTheSkyXBottomAltitude, mTheSkyXTopAltitude, mPhotoBitmap.Height, 0);
             zeroDegreePixelRow = Math.Round(zeroDegreePixelRow);
 
-            using (Graphics g = Graphics.FromImage(destinationBitmap))
+            using (Graphics g = panel1.CreateGraphics())
             {
                 Pen pen = new Pen(Color.FromArgb(255, 255, 255, 255), 2);
                 g.DrawLine(pen, 0, (float)zeroDegreePixelRow, destinationBitmap.Width, (float)zeroDegreePixelRow);
 
                 g.DrawString("Horizon", new Font("Tahoma", 36), Brushes.White, destinationBitmap.Width >> 1, (float)zeroDegreePixelRow);
+            }
+        }
+
+        private Graphics mGraphics = null;
+
+        private void TrackBarSkyXTop_Scroll(object sender, EventArgs e)
+        {
+            if (mScrollTimer == null)
+            {
+                // Will tick every 500ms (change as required)
+                mScrollTimer = new Timer()
+                {
+                    Enabled = false,
+                    Interval = 10,
+                    Tag = (sender as TrackBar).Value
+                };
+
+                mScrollTimer.Tick += (s, ea) =>
+                {
+                    // check to see if the value has changed since we last ticked
+                    if (TrackBarSkyXTop.Value == (int)mScrollTimer.Tag)
+                    {
+                        // scrolling has stopped so we are good to go ahead and do stuff
+                        mScrollTimer.Stop();
+
+                        mTheSkyXTopAltitude = Convert.ToDouble(TrackBarSkyXTop.Value) / 10.0;
+                        TextBoxTheSkyXTopAltitude.Text = mTheSkyXTopAltitude.ToString("F1");
+
+
+                        if (!RadioButtonHorizonImageHide.Checked)
+                        {
+                            if (RadioButtonPanoImagePhoto.Checked)
+                            {
+                                
+                                DrawEquatorialLines(mPhotoBitmap);
+                                //panel1.BackgroundImage = mPhotoBitmap;
+                            }
+
+                            if (RadioButtonPanoImageTransparency.Checked)
+                            {
+                                DrawEquatorialLines(mTansparencyBitmap);
+                                //panel1.BackgroundImage = mTansparencyBitmap;
+                            }
+
+                            if (RadioButtonPanoImageSkyHorizon.Checked)
+                            {
+                                DrawEquatorialLines(mSkyLineBitmap);
+                                //panel1.BackgroundImage = mSkyLineBitmap;
+                            }
+
+                            //panel1.Invalidate(false);
+                        }
+
+                       
+                        mScrollTimer.Dispose();
+                        mScrollTimer = null;
+                    }
+                    else
+                    {
+                        // record the last value seen
+                        TextBoxTheSkyXTopAltitude.Text = (Convert.ToDouble(TrackBarSkyXTop.Value) / 10.0).ToString("F1");
+                        mScrollTimer.Tag = TrackBarSkyXTop.Value;
+                    }
+                };
+
+                mScrollTimer.Start();
+            }
+        }
+
+        private void TrackBarSkyXBottom_Scroll(object sender, EventArgs e)
+        {
+            if (mScrollTimer == null)
+            {
+                // Will tick every 500ms (change as required)
+                mScrollTimer = new Timer()
+                {
+                    Enabled = false,
+                    Interval = 30,
+                    Tag = (sender as TrackBar).Value
+                };
+
+                mScrollTimer.Tick += (s, ea) =>
+                {
+                    // check to see if the value has changed since we last ticked
+                    if (TrackBarSkyXBottom.Value == (int)mScrollTimer.Tag)
+                    {
+                        // scrolling has stopped so we are good to go ahead and do stuff
+                        mScrollTimer.Stop();
+
+                        mTheSkyXBottomAltitude = Convert.ToDouble(TrackBarSkyXBottom.Value) / 10.0;
+                        TextBoxTheSkyXBottomAltitude.Text = mTheSkyXBottomAltitude.ToString("F1");
+
+                        if (!RadioButtonHorizonImageHide.Checked)
+                        {
+                            
+                        }
+
+                        mScrollTimer.Dispose();
+                        mScrollTimer = null;
+                    }
+                    else
+                    {
+                        // record the last value seen
+                        TextBoxTheSkyXBottomAltitude.Text = (Convert.ToDouble(TrackBarSkyXBottom.Value) / 10).ToString("F1");
+                        mScrollTimer.Tag = TrackBarSkyXBottom.Value;
+                    }
+                };
+
+                mScrollTimer.Start();
+            }
+        }
+
+        private void TrackBarSkyXLeftRight_Scroll(object sender, EventArgs e)
+        {
+            if (mScrollTimer == null)
+            {
+                // Will tick every 500ms (change as required)
+                mScrollTimer = new Timer()
+                {
+                    Enabled = false,
+                    Interval = 30,
+                    Tag = (sender as TrackBar).Value
+                };
+
+                mScrollTimer.Tick += (s, ea) =>
+                {
+                    // check to see if the value has changed since we last ticked
+                    if (TrackBarSkyXLeftRight.Value == (int)mScrollTimer.Tag)
+                    {
+                        // scrolling has stopped so we are good to go ahead and do stuff
+                        mScrollTimer.Stop();
+
+                        if (!RadioButtonHorizonImageHide.Checked)
+                        {
+                            mBoolShowSkyHorizonLine = false;
+                            FindHorizon(mTansparencyBitmap);
+                            panel1.BackgroundImage = mTansparencyBitmap;
+                            panel1.Invalidate(false);
+                        }
+
+                        mScrollTimer.Dispose();
+                        mScrollTimer = null;
+                    }
+                    else
+                    {
+                        // record the last value seen
+                        //TextBoxTheSkyXBottomAltitude.Text = (TextBoxTheSkyXLeftRight.Value / 10).ToString("F1");
+                        //TextBoxTheSkyXLeftRightAzimuth.Text = mTheSkyXLeftRightAzimuth.ToString("F1");
+                        mScrollTimer.Tag = TrackBarSkyXLeftRight.Value;
+                    }
+                };
+
+                mScrollTimer.Start();
             }
         }
     }
